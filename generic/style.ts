@@ -1,0 +1,1 @@
+export type Style = JSX.IntrinsicElements[keyof JSX.IntrinsicElements]['style'];
