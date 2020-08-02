@@ -1,19 +1,15 @@
 import { Style } from '@/generic/style';
 
-import { Memory, CpuRegisters } from "@asm/domain";
+import { Memory, State } from "@asm/domain";
 import { colors } from '@asm/color';
 
 interface Props {
   memory: Memory;
-  register: CpuRegisters;
+  register: State['registers'];
 }
 
 const Element: React.FC<Props> = (props) => {
   const { memory, register } = props;
-  const pointing = Object.keys(register).filter(
-    (pointerName) => register[pointerName] === memory.address,
-  );
-
   return (
     <div style={{display: 'table-row'}}>
       <div style={{...cellStyle, textAlign: 'right'}}>{memory.address}</div>

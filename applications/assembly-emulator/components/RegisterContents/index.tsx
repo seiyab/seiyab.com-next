@@ -1,7 +1,7 @@
-import { CpuRegisters } from '@asm/domain';
+import { State } from '@asm/domain';
 
 interface Props {
-  register: CpuRegisters;
+  register: State['registers'];
 }
 
 const Registers: React.FC<Props> = (props) => {

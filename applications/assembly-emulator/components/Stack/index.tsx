@@ -1,14 +1,13 @@
-import { Memory, CpuRegisters } from "@asm/domain";
+import { Memory, State } from "@asm/domain";
 import Element from "@asm/components/Element";
 import { colors } from '@asm/color';
 
 interface Props {
-  memories: Memory[];
-  register: CpuRegisters;
+  state: State;
 }
 
 const Stack: React.FC<Props> = (props: Props) => {
-  const { memories, register } = props;
+  const { state } = props;
   return (
     <div style={{display: 'table'}}>
         <div style={{display: 'table-row'}}>
@@ -18,8 +17,8 @@ const Stack: React.FC<Props> = (props: Props) => {
           <div style={{...cellStyle, width: '80px'}}>RBP</div>
         </div>
       {
-        memories.map((memory) => (
-          <Element key={memory.address} memory={memory} register={register}/>
+        state.memories.map((memory) => (
+          <Element key={memory.address} memory={memory} register={state.registers}/>
         ))
       }
     </div>
