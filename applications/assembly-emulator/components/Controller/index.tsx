@@ -7,12 +7,11 @@ import Button from '@asm/components/Button';
 import { colors } from '@asm/color';
 
 interface Props {
-  state: State,
   setState: (transform: (oldState: State) => State) => void;
 }
 
 const Controller: React.FC<Props> = (props: Props) => {
-  const { state, setState } = props;
+  const { setState } = props;
   const [value, setValue] = useState('0');
   const intValue = parseNaiveInt(value);
   const onChange: JSX.IntrinsicElements['input']['onChange'] = useCallback(

@@ -3,7 +3,7 @@ import Head from 'next/head';
 import App from '@asm/components/App';
 import { defaultBackGround, defaultText } from '@asm/color';
 
-const AssemblyEmulatorPage = () => {
+const AssemblyEmulatorPage: React.FC = () => {
   return (
     <>
       <Head>

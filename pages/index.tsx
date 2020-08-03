@@ -1,4 +1,4 @@
-const Home = () => (
+const Home: React.FC = () => (
   <main>
     seiyab.com
   </main>

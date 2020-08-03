@@ -1,4 +1,4 @@
-import { Memory, State } from "@asm/domain";
+import { State } from "@asm/domain";
 import Element from "@asm/components/Element";
 import { colors } from '@asm/color';
 

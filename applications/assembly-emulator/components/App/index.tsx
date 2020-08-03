@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Stack from '@asm/components/Stack';
 import RegisterContents from '@/applications/assembly-emulator/components/RegisterContents';
 import Controller from '@asm/components/Controller';
-import { Address, Memory, initialState } from '@asm/domain';
+import { initialState } from '@asm/domain';
 
 const init = initialState(10);
 
@@ -21,7 +21,6 @@ const App: React.FC = () => {
       </div>
       <div style={{marginLeft: '10px'}}>
         <Controller
-          state={state}
           setState={setState}
         />
       </div>
