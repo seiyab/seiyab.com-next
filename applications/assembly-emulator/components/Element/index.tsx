@@ -1,4 +1,4 @@
-import { Style } from '@/generic/style';
+import { CSSProperties } from 'react';
 
 import { Memory, State } from "@asm/domain";
 import { colors } from '@asm/color';
@@ -32,7 +32,7 @@ const Element: React.FC<Props> = (props) => {
   )
 };
 
-const cellStyle: Style = {
+const cellStyle: CSSProperties = {
   display: 'table-cell',
   padding: '3px 5px',
   borderStyle: 'solid',
@@ -40,7 +40,7 @@ const cellStyle: Style = {
   borderWidth: '1px',
 };
 
-const pointerStyle: Style = {
+const pointerStyle: CSSProperties = {
   backgroundColor: colors[4],
   color: colors[1],
   borderRadius: '2px',

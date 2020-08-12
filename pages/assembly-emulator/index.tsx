@@ -18,7 +18,9 @@ const AssemblyEmulatorPage: React.FC = () => {
         </style>
       </Head>
       <main>
-        <App />
+        <div style={{display: 'flex', justifyContent: 'center'}}>
+          <App />
+        </div>
       </main>
     </>
   ) ;

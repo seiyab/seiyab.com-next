@@ -2,8 +2,10 @@ import { useCallback, useState } from 'react';
 
 import { parseNaiveInt } from "@/generic/number";
 
-import { State, push, pop } from "@asm/domain";
+import { State, push, pop, Register } from "@asm/domain";
 import Button from '@asm/components/Button';
+import Select from '@/applications/assembly-emulator/components/Select';
+import { useSelect } from '@/applications/assembly-emulator/components/Select/hooks';
 import { colors } from '@asm/color';
 
 interface Props {
@@ -12,11 +14,11 @@ interface Props {
 
 const Controller: React.FC<Props> = (props: Props) => {
   const { setState } = props;
-  const [value, setValue] = useState('0');
-  const intValue = parseNaiveInt(value);
+  const [pushValue, setPushValue] = useState('0');
+  const intValue = parseNaiveInt(pushValue);
   const onChange: JSX.IntrinsicElements['input']['onChange'] = useCallback(
-    (event) => setValue(event.target.value),
-    [setValue],
+    (event) => setPushValue(event.target.value),
+    [setPushValue],
   );
   const onClickPush: JSX.IntrinsicElements['button']['onClick'] = useCallback(
     () => {
@@ -25,12 +27,23 @@ const Controller: React.FC<Props> = (props: Props) => {
     },
     [intValue, setState]
   )
+
+  const selectProps = useSelect<Register>(
+    [
+      {value: 'RSP', text: 'RSP'},
+      {value: 'RBP', text: 'RBP'},
+      {value: 'RAX', text: 'RAX'},
+    ],
+    'RAX',
+  )
   const onClickPop: JSX.IntrinsicElements['button']['onClick'] = useCallback(
     () => {
-      setState(pop('RAX'));
+      setState(pop(selectProps.selected));
+      console.log(selectProps.selected);
     },
-    [setState],
+    [setState, selectProps.selected],
   )
+
   return (
     <div>
       <div>
@@ -42,7 +55,7 @@ const Controller: React.FC<Props> = (props: Props) => {
         </Button>
         <input
           type="number"
-          value={value}
+          value={pushValue}
           onChange={onChange}
           style={{
             marginLeft: '3px',
@@ -56,6 +69,13 @@ const Controller: React.FC<Props> = (props: Props) => {
         >
           POP
         </Button>
+        <Select
+          name={'popRegister'}
+          {...selectProps}
+          style={{
+            marginLeft: '3px',
+          }}
+        />
       </div>
     </div>
   );

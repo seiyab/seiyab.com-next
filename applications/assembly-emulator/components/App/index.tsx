@@ -16,10 +16,10 @@ const App: React.FC = () => {
           state={state}
         />
       </div>
-      <div style={{marginLeft: '10px'}}>
+      <div style={{marginLeft: '20px'}}>
         <RegisterContents register={state.registers}/>
       </div>
-      <div style={{marginLeft: '10px'}}>
+      <div style={{marginLeft: '30px'}}>
         <Controller
           setState={setState}
         />
