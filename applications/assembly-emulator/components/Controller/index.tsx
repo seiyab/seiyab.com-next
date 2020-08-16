@@ -2,11 +2,11 @@ import { useCallback, useState } from 'react';
 
 import { parseNaiveInt } from "@/generic/number";
 
-import { State, push, pop, Register } from "@asm/domain";
+import { State, push, pop, Operand } from "@asm/domain";
 import Button from '@asm/components/Button';
-import Select from '@/applications/assembly-emulator/components/Select';
-import { useSelect } from '@/applications/assembly-emulator/components/Select/hooks';
-import { colors } from '@asm/color';
+import Input from '@asm/components/Input';
+
+import { WOperandSelector } from './OperandSelector';
 
 interface Props {
   setState: (transform: (oldState: State) => State) => void;
@@ -28,53 +28,49 @@ const Controller: React.FC<Props> = (props: Props) => {
     [intValue, setState]
   )
 
-  const selectProps = useSelect<Register>(
-    [
-      {value: 'RSP', text: 'RSP'},
-      {value: 'RBP', text: 'RBP'},
-      {value: 'RAX', text: 'RAX'},
-    ],
-    'RAX',
-  )
+  const [popOperand, setPopOperand] = useState<Operand<'Register'| 'Memory'>>(
+    { kind: 'Register', value: 'RAX' },
+  );
+  const onChangePopOperand = useCallback(
+    (operand: Operand) => {
+      if (operand.kind === 'Immediate') return;
+      setPopOperand(operand);
+    },
+    [setPopOperand],
+  );
   const onClickPop: JSX.IntrinsicElements['button']['onClick'] = useCallback(
     () => {
-      setState(pop(selectProps.selected));
-      console.log(selectProps.selected);
+      setState(pop(popOperand));
     },
-    [setState, selectProps.selected],
+    [setState, popOperand],
   )
 
   return (
-    <div>
-      <div>
+    <div style={{ width: '250px' }}>
+      <div style={{ display: 'flex' }}>
         <Button
           disabled={isNaN(intValue)}
           onClick={onClickPush}
         >
           PUSH
         </Button>
-        <input
+        <span style={{width: '4px'}} />
+        <Input
           type="number"
           value={pushValue}
           onChange={onChange}
-          style={{
-            marginLeft: '3px',
-            backgroundColor: colors[0],
-          }}
         />
       </div>
-      <div style={{marginTop: '10px'}}>
+      <div style={{ marginTop: '10px', display: 'flex' }}>
         <Button
           onClick={onClickPop}
         >
           POP
         </Button>
-        <Select
-          name={'popRegister'}
-          {...selectProps}
-          style={{
-            marginLeft: '3px',
-          }}
+        <span style={{width: '4px'}} />
+        <WOperandSelector
+          current={popOperand}
+          onChange={onChangePopOperand}
         />
       </div>
     </div>

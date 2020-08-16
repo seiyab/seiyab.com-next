@@ -3,7 +3,7 @@ import { CSSProperties } from 'react';
 export interface Props<T extends string> {
   options: Option<T>[];
   selected: T;
-  name: string;
+  name?: string;
   onChange: JSX.IntrinsicElements['select']['onChange'];
   style?: CSSProperties;
 }

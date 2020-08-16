@@ -1,5 +1,5 @@
 import { pipe } from '@/generic/function';
-import {push, pop, initialState} from '.';
+import {push, pop, initialState, Address} from '.';
 
 it('monkey', () => {
   const state1 = initialState(10);
@@ -15,12 +15,17 @@ it('monkey', () => {
   expect(state2.registers.RSP).toBe(3);
 
   const state3 = pipe(state2)
-    .then(pop("RAX"))
-    .then(pop("RBP"))
+    .then(pop({ kind: 'Register', value: "RAX" }))
+    .then(pop({ kind: 'Register', value: "RBP" }))
     .run();
 
   expect(state3.memories[1].content).toBe(3);
   expect(state3.registers.RSP).toBe(1);
   expect(state3.registers.RAX).toBe(1);
   expect(state3.registers.RBP).toBe(2);
+
+  const state4 = pop({ kind: 'Memory', value: 7 as Address })(state3);
+
+  expect(state4.memories[7].content).toBe(3);
+  expect(state4.registers.RSP).toBe(0);
 });

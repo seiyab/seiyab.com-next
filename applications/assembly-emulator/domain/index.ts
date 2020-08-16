@@ -1,4 +1,5 @@
 import { TypedNumber } from '@/generic/number';
+import { unreachable } from '@/generic/syntax';
 
 export interface State {
   memories: Memory[];
@@ -36,6 +37,21 @@ export const initialState = (size: number): State => {
   }
 }
 
+export type OperandKind = 'Immediate' | 'Register' | 'Memory';
+
+export type Operand<K extends OperandKind = OperandKind> = ({
+  kind: 'Immediate',
+  value: number,
+} | {
+  kind: 'Register',
+  value: Register,
+} | {
+  kind: 'Memory',
+  value: Address,
+}) & {
+  kind: K,
+};
+
 export const push = (value: number): Action => (state: State): State => {
   const { memories, registers } = state;
   const newRSP = incrementAddress(registers.RSP);
@@ -52,7 +68,7 @@ export const push = (value: number): Action => (state: State): State => {
   };
 }
 
-export const pop = (operand: Register): Action => (state: State) => {
+export const pop = (operand: Operand<'Register'|'Memory'>): Action => (state: State) => {
   const { memories, registers } = state;
   const newRSP = decrementAddress(registers.RSP);
   if (newRSP < 0) return state;
@@ -60,12 +76,29 @@ export const pop = (operand: Register): Action => (state: State) => {
   const value = memories.find((memory) => memory.address === registers.RSP)?.content;
   if (value === undefined) return state;
 
-  return {
-    memories,
-    registers: {
-      ...registers,
-      RSP: newRSP,
-      [operand]: value,
+  if (operand.kind === 'Register') {
+    return {
+      memories,
+      registers: {
+        ...registers,
+        RSP: newRSP,
+        [operand.value]: value,
+      }
     }
   }
+
+  if (operand.kind === 'Memory') {
+    const newMemories = memories.map(
+      (memory) => memory.address === operand.value ? {...memory, content: value} : memory,
+    )
+    return {
+      memories: newMemories,
+      registers: {
+        ...registers,
+        RSP: newRSP,
+      },
+    }
+  }
+
+  return unreachable(operand);
 };
