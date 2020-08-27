@@ -4,9 +4,9 @@ import { colors } from '@asm/color';
 import { Props } from './types';
 
 const Select = <T extends string>(props: Props<T>): React.ReactElement<Props<T>> => {
-  const { options, name, style, onChange } = props;
+  const { options, selected, name, style, onChange } = props;
   return(
-    <select name={name} style={{...defaultStyle, ...style}} onChange={onChange}>
+    <select name={name} style={{...defaultStyle, ...style}} onChange={onChange} defaultValue={selected}>
       {
         options.map((option) => (
           <option key={option.value} value={option.value}>

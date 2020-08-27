@@ -2,11 +2,11 @@ import { useCallback, useState } from 'react';
 
 import { parseNaiveInt } from "@/generic/number";
 
-import { State, push, pop, Operand } from "@asm/domain";
+import { Address, State, push, pop, Operand, SrcOperand, DstOperand, mov } from "@asm/domain";
 import Button from '@asm/components/Button';
 import Input from '@asm/components/Input';
 
-import { WOperandSelector } from './OperandSelector';
+import RWOperandSelector, { WOperandSelector } from './OperandSelector';
 
 interface Props {
   setState: (transform: (oldState: State) => State) => void;
@@ -45,6 +45,34 @@ const Controller: React.FC<Props> = (props: Props) => {
     [setState, popOperand],
   )
 
+  const [movSrc, setMovSrc] = useState<SrcOperand>(
+    { kind: 'Immediate', value: 0 },
+  );
+  const onChangeMovSrc = useCallback(
+    (src: Operand) => {
+      setMovSrc(src);
+    },
+    [setMovSrc],
+  );
+  const [movDst, setMovDst] = useState<DstOperand>(
+    { kind: 'Memory', value: 0 as Address },
+  );
+  console.log(movDst);
+  const onChangeMovDst = useCallback(
+    (dst: Operand) => {
+      console.log(dst);
+      if (dst.kind === 'Immediate') return;
+      setMovDst(dst);
+    },
+    [setMovDst],
+  );
+  const onClickMov: JSX.IntrinsicElements['button']['onClick'] = useCallback(
+    () => {
+      setState(mov(movDst, movSrc));
+    },
+    [setState, movSrc, movDst],
+  )
+
   return (
     <div style={{ width: '250px' }}>
       <div style={{ display: 'flex' }}>
@@ -72,6 +100,24 @@ const Controller: React.FC<Props> = (props: Props) => {
           current={popOperand}
           onChange={onChangePopOperand}
         />
+      </div>
+      <div style={{ marginTop: '10px', display: 'flex' }}>
+        <Button
+          onClick={onClickMov}
+        >
+          MOV
+        </Button>
+        <span style={{width: '4px'}} />
+        <div>
+          <RWOperandSelector
+            current={movSrc}
+            onChange={onChangeMovSrc}
+          />
+          <WOperandSelector
+            current={movDst}
+            onChange={onChangeMovDst}
+          />
+        </div>
       </div>
     </div>
   );

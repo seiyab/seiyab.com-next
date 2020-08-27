@@ -1,3 +1,5 @@
+import { matchOn } from 'ts-union-tools';
+
 import { TypedNumber } from '@/generic/number';
 import { unreachable } from '@/generic/syntax';
 
@@ -52,6 +54,9 @@ export type Operand<K extends OperandKind = OperandKind> = ({
   kind: K,
 };
 
+export type SrcOperand = Operand;
+export type DstOperand = Operand<'Register'| 'Memory'>;
+
 export const push = (value: number): Action => (state: State): State => {
   const { memories, registers } = state;
   const newRSP = incrementAddress(registers.RSP);
@@ -68,7 +73,7 @@ export const push = (value: number): Action => (state: State): State => {
   };
 }
 
-export const pop = (operand: Operand<'Register'|'Memory'>): Action => (state: State) => {
+export const pop = (operand: DstOperand): Action => (state: State) => {
   const { memories, registers } = state;
   const newRSP = decrementAddress(registers.RSP);
   if (newRSP < 0) return state;
@@ -102,3 +107,29 @@ export const pop = (operand: Operand<'Register'|'Memory'>): Action => (state: St
 
   return unreachable(operand);
 };
+
+export const mov = (dst: DstOperand, src: SrcOperand): Action => (state: State): State => {
+  const { memories, registers } = state;
+
+  const value = matchOn('kind', src, {
+    'Immediate': (s) => s.value,
+    'Register': (s) => registers[s.value],
+    'Memory': (s) => memories.find((m) => m.address === s.value)?.content ?? 0,
+  });
+
+  return matchOn('kind', dst, {
+    'Register': (d) => ({
+      memories,
+      registers: {
+        ...registers,
+        [d.value]: value,
+      }
+    }),
+    'Memory': (d) => ({
+      memories: memories.map(
+        (memory) => memory.address === d.value ? {...memory, content: value} : memory,
+      ),
+      registers,
+    }),
+  });
+}

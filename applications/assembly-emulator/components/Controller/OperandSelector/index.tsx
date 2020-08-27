@@ -52,7 +52,7 @@ const operandSelector = (ks: AvailableOption<OperandKind>): React.FC<Props> => (
   const onChangeConst: JSX.IntrinsicElements['input']['onChange'] = useCallback(
     (ev: ChangeEvent<HTMLInputElement>) => {
       const intValue = parseNaiveInt(ev.target.value);
-      if (intValue === undefined) return;
+      if (isNaN(intValue)) return;
       onChange({ kind: 'Immediate', value: intValue});
     },
     [onChange],
@@ -67,13 +67,13 @@ const operandSelector = (ks: AvailableOption<OperandKind>): React.FC<Props> => (
   const onChangeMemory: JSX.IntrinsicElements['input']['onChange'] = useCallback(
     (ev: ChangeEvent<HTMLInputElement>) => {
       const intValue = parseNaiveInt(ev.target.value);
-      if (intValue === undefined) return;
+      if (isNaN(intValue)) return;
       onChange({ kind: 'Memory', value: intValue as Address});
     },
     [onChange],
   );
   return (
-    <>
+    <div style={{display: 'flex'}}>
       <Select
         options={ks}
         selected={current.kind}
@@ -83,7 +83,7 @@ const operandSelector = (ks: AvailableOption<OperandKind>): React.FC<Props> => (
       {
         match(current.kind)({
           'Immediate': (<Input
-            value={current.value}
+            defaultValue={0}
             type="number"
             onChange={onChangeConst}
             style={{ width: '80px' }}
@@ -94,14 +94,14 @@ const operandSelector = (ks: AvailableOption<OperandKind>): React.FC<Props> => (
             onChange={onChangeRegister}
           />),
           'Memory': (<Input
-            value={current.value}
+            defaultValue={0}
             type="number"
             onChange={onChangeMemory}
             style={{ width: '80px' }}
           />),
         })
       }
-    </>
+    </div>
   );
 };
 
