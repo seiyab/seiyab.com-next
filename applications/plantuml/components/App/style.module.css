@@ -1,0 +1,18 @@
+.app {
+  display: flex;
+  justify-content: center;
+}
+
+.main {
+  background-color: whitesmoke;
+  min-width: 800px;
+  display: flex;
+}
+
+.input {
+  margin-right: 30px;
+}
+
+.diagram {
+  margin-left: 30px;
+}

@@ -20,7 +20,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["*"],
-      "@asm/*": ["applications/assembly-emulator/*"]
+      "@asm/*": ["applications/assembly-emulator/*"],
+      "@puml/*": ["applications/plantuml/*"]
     }
   },
   "exclude": [
