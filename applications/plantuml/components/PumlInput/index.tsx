@@ -22,8 +22,11 @@ const PumlInput: React.FC<Props> = ({ className }) => {
     <div className={clsx(className)}>
       <header>
         Paste PlantUML here
+        <ReloadButton onClick={reload}/>
       </header>
-      <ReloadButton onClick={reload}/>
+      <section>
+        * Not Implemented yet
+      </section>
     </div>
   );
 };
