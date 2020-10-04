@@ -9,6 +9,7 @@ import { globalState } from '@puml/state';
 import ClazzView from './ClazzView';
 import LinkView from './LinkView';
 import { usePositionState } from './hooks/usePositionState';
+import { Position } from './position';
 
 interface Props {
   className?: string;
@@ -18,14 +19,11 @@ const Diagram: React.FC<Props> = ({ className }) => {
   const [pumlState] = useRecoilState(globalState);
   const [positionState, setPositionState] = usePositionState(pumlState);
   const moveClazz = useCallback(
-    (clazzName: ClazzName, dx: number, dy: number) => {
+    (clazzName: ClazzName, { x, y }: Position) => {
       setPositionState((prev) => ({
         clazzes: {
           ...prev.clazzes,
-          [clazzName]: {
-            x: (find(prev.clazzes, clazzName)?.x ?? 0) + dx,
-            y: (find(prev.clazzes, clazzName)?.y ?? 0) + dy,
-          }
+          [clazzName]: { x, y },
         }
       }))
     },
@@ -46,7 +44,7 @@ const Diagram: React.FC<Props> = ({ className }) => {
           <g>
             {Object.values<Clazz>(pumlState.clazzes).map(
               (clazz) => {
-                const position = (positionState.clazzes as any)[clazz.name];
+                const position = find(positionState.clazzes, clazz.name);
                 return position && <g key={clazz.name}><ClazzView
                   x={position.x}
                   y={position.y}

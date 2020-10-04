@@ -1,10 +1,13 @@
 import clsx from 'clsx';
 import {
   useCallback,
+  useMemo,
   useState,
 } from 'react';
 
 import { Clazz, ClazzName } from "@puml/domain";
+
+import { Position } from '../position';
 
 import style from './style.module.css';
 
@@ -12,14 +15,12 @@ type Props =
   & JSX.IntrinsicElements['svg']
   & {
     clazz: Clazz;
-    onMove?: (clazzName: ClazzName, dx: number, dy: number) => void;
+    onMove?: (clazzName: ClazzName, position: Position) => void;
   };
 
 type DragState = {
-  originalX: number,
-  originalY: number,
-  currentX: number,
-  currentY: number,
+  original: Position,
+  start: Position,
 }
 
 type SVGMouseEvent = React.MouseEvent<SVGSVGElement, MouseEvent> & PointerEvent;
@@ -31,57 +32,51 @@ const parse = (a?: string | number) => {
 };
 
 const ClazzView: React.FC<Props> = ({ clazz, children: _, onMove, ...props }) => {
+  const propsPosition = useMemo(() => ({
+    x: parse(props.x) ?? 0,
+    y: parse(props.y) ?? 0,
+  }), [props.x, props.y]);
+
   const [dragState, setDragState] = useState<DragState | null>(null);
-  const dx = dragState ? dragState.currentX - dragState.originalX : 0;
-  const dy = dragState ? dragState.currentY - dragState.originalY : 0;
   const startDrag = useCallback(
     (event: SVGMouseEvent) => {
       const newState = {
-        originalX: event.pageX,
-        originalY: event.pageY,
-        currentX: event.pageX,
-        currentY: event.pageY,
+        original: propsPosition,
+        start: { x: event.pageX, y: event.pageY },
+        current: { x: event.pageX, y: event.pageY }
       }
       event.currentTarget.setPointerCapture(event.pointerId)
       setDragState(newState)
     },
-    [],
+    [propsPosition],
   );
   const dragging = useCallback(
     (event: SVGMouseEvent) => {
-      const x = event.pageX;
-      const y = event.pageY;
-      setDragState((prev) => {
-        if (prev === null) return null;
-        return {
-          ...prev,
-          currentX: x,
-          currentY: y,
-        }
-      });
+      if (dragState === null) return;
+      if (!onMove) return;
+      onMove(clazz.name, {
+        x: dragState.original.x + event.pageX - dragState.start.x,
+        y: dragState.original.y + event.pageY - dragState.start.y,
+      })
     },
-    [],
+    [dragState, onMove, clazz.name],
   );
   const endDrag = useCallback(
     (event: SVGMouseEvent)  => {
       event.currentTarget.releasePointerCapture(event.pointerId);
-      if (dragState === null) return;
-      if (onMove) {
-        onMove(
-          clazz.name,
-          event.pageX - dragState.originalX,
-          event.pageY - dragState.originalY,
-        );
-      }
       setDragState(null);
+      if (dragState === null) return;
+      if (!onMove) return;
+      onMove(clazz.name, {
+        x: dragState.original.x + event.pageX - dragState.start.x,
+        y: dragState.original.y + event.pageY - dragState.start.y,
+      })
     },
     [dragState, onMove, clazz.name],
   );
   return (
     <svg
       {...props}
-      x={(parse(props.x) ?? 0) + dx}
-      y={(parse(props.y) ?? 0) + dy}
       width={clazzSize.width}
       height={clazzSize.height}
       onMouseDown={startDrag}
