@@ -15,6 +15,7 @@
   "dependencies": {
     "clsx": "^1.1.1",
     "next": "^9.4.4",
+    "plantuml-parser": "0.0.16",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "recoil": "0.0.13",

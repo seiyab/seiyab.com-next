@@ -1,10 +1,17 @@
 import clsx from 'clsx';
-import { useCallback } from 'react';
+import {
+  parse,
+  Class,
+  Relationship,
+} from 'plantuml-parser';
+import { useCallback, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { ClazzName } from '@puml/domain';
 import ReloadButton from '@puml/components/ReloadButton';
-import { globalState } from '@puml/state';
+import { globalState, State, empty } from '@puml/state';
+import { iife } from '@/generic/function';
+import { put } from '@/generic/string';
 
 interface Props {
   className?: string;
@@ -12,9 +19,15 @@ interface Props {
 
 const PumlInput: React.FC<Props> = ({ className }) => {
   const [, setState] = useRecoilState(globalState);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const reload = useCallback(
     () => {
-      setState(dummyState)
+      const text = textareaRef.current?.value;
+      if (!text) {
+        setState(empty);
+        return;
+      }
+      setState(textToState(text));
     },
     [setState],
   )
@@ -25,26 +38,45 @@ const PumlInput: React.FC<Props> = ({ className }) => {
         <ReloadButton onClick={reload}/>
       </header>
       <section>
+        <textarea
+          rows={40}
+          cols={25}
+          ref={textareaRef}
+        />
       </section>
     </div>
   );
 };
 
-const dummyState = {
-  clazzes: {
-    ['User' as ClazzName]: {
-      name: 'User' as ClazzName,
-    },
-    ['Tweet' as ClazzName]: {
-      name: 'Tweet' as ClazzName,
-    },
-  },
-  links: [
-    {
-      src: { target: 'User' as ClazzName },
-      dst: { target: 'Tweet' as ClazzName },
+const textToState = (text: string): State =>  {
+  const umls = iife(() => {
+    try {
+      return parse(text);
+    } catch(e) {
+      console.error(e);
+      return null;
     }
-  ],
-};
+  });
+
+  const state = empty();
+
+  umls?.forEach((uml) => {
+    uml.elements.forEach((elm) => {
+      if (elm instanceof Class) {
+        const name = elm.name as ClazzName;
+        put(state.clazzes, name, { name });
+        return;
+      }
+      if (elm instanceof Relationship) {
+        state.links.push({
+          src: { target: elm.left as ClazzName },
+          dst: { target: elm.right as ClazzName }
+        })
+      }
+    });
+  });
+
+  return state;
+}
 
 export default PumlInput;

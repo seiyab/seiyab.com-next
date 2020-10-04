@@ -6,12 +6,14 @@ import {
   Link,
 } from '@puml/domain';
 
+export const empty: () => State = () => ({
+  clazzes: {},
+  links: [],
+});
+
 export const globalState = atom<State>({
   key: 'globalState',
-  default: {
-    clazzes: {},
-    links: [],
-  },
+  default: empty(),
 });
 
 export interface State {
