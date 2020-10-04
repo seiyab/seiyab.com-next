@@ -1,5 +1,7 @@
 type Fn<S, T> = (s: S) => T;
 
+export const iife = <T>(f: () => T): T => f();
+
 interface Pipe<T> {
   then: <U>(f: Fn<T, U>) => Pipe<U>;
   run: () => T;
