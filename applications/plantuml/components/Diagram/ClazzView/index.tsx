@@ -30,7 +30,7 @@ const parse = (a?: string | number) => {
   return r;
 };
 
-const ClazzView: React.FC<Props> = ({ clazz, children, onMove, ...props }) => {
+const ClazzView: React.FC<Props> = ({ clazz, children: _, onMove, ...props }) => {
   const [dragState, setDragState] = useState<DragState | null>(null);
   const dx = dragState ? dragState.currentX - dragState.originalX : 0;
   const dy = dragState ? dragState.currentY - dragState.originalY : 0;

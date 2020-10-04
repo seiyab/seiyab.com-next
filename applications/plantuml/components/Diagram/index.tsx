@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useRecoilState } from "recoil"
 
 import { Clazz, ClazzName } from '@puml/domain';
