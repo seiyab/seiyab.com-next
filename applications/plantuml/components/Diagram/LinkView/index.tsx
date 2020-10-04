@@ -5,16 +5,16 @@ import { clazzSize } from '../ClazzView';
 
 interface Props {
   link: Link;
-  leftPosition: Position;
-  rightPosition: Position;
+  srcPosition: Position;
+  dstPosition: Position;
 }
 
 const LinkView: React.FC<Props> = ({
   link: _link,
-  leftPosition,
-  rightPosition,
+  srcPosition,
+  dstPosition,
 }) => {
-  const terminals = locateTerminal(leftPosition, rightPosition);
+  const terminals = locateTerminal(srcPosition, dstPosition);
   if ( terminals === null) return null;
   const {
     srcTerminal,

@@ -25,7 +25,6 @@ const PumlInput: React.FC<Props> = ({ className }) => {
         <ReloadButton onClick={reload}/>
       </header>
       <section>
-        * Not Implemented yet
       </section>
     </div>
   );
@@ -42,8 +41,8 @@ const dummyState = {
   },
   links: [
     {
-      left: { target: 'User' as ClazzName },
-      right: { target: 'Tweet' as ClazzName },
+      src: { target: 'User' as ClazzName },
+      dst: { target: 'Tweet' as ClazzName },
     }
   ],
 };

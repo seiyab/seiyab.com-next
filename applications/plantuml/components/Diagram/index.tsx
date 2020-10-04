@@ -55,14 +55,14 @@ const Diagram: React.FC<Props> = ({ className }) => {
             )}
           </g>
           {pumlState.links.map((link) => {
-            const leftPosition = find(positionState.clazzes, link.left.target);
-            const rightPosition = find(positionState.clazzes, link.right.target);
-            if (leftPosition === null || rightPosition === null) return null;
+            const srcPosition = find(positionState.clazzes, link.src.target);
+            const dstPosition = find(positionState.clazzes, link.dst.target);
+            if (srcPosition === null || dstPosition === null) return null;
             return <LinkView
-              key={link.left.target + '#' + link.right.target}
+              key={link.src.target + '#' + link.dst.target}
               link={link}
-              leftPosition={leftPosition}
-              rightPosition={rightPosition}
+              srcPosition={srcPosition}
+              dstPosition={dstPosition}
             />;
           })}
         </svg>

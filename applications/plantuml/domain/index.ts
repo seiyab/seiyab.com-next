@@ -7,8 +7,8 @@ export interface Clazz {
 export type ClazzName = TypedString<'ClazzName'>;
 
 export interface Link {
-  left: LinkTerminal;
-  right: LinkTerminal
+  src: LinkTerminal;
+  dst: LinkTerminal
 }
 
 interface LinkTerminal {
