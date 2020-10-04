@@ -63,7 +63,7 @@ const ClazzView: React.FC<Props> = ({ clazz, children: _, onMove, ...props }) =>
     [],
   );
   const endDrag = useCallback(
-    (event: SVGMouseEvent & PointerEvent)  => {
+    (event: SVGMouseEvent)  => {
       event.currentTarget.releasePointerCapture(event.pointerId);
       if (dragState === null) return;
       if (onMove) {
@@ -82,8 +82,8 @@ const ClazzView: React.FC<Props> = ({ clazz, children: _, onMove, ...props }) =>
       {...props}
       x={(parse(props.x) ?? 0) + dx}
       y={(parse(props.y) ?? 0) + dy}
-      width="100"
-      height="60"
+      width={clazzSize.width}
+      height={clazzSize.height}
       onMouseDown={startDrag}
       onMouseMove={dragging}
       onMouseUp={endDrag}
@@ -102,5 +102,10 @@ const ClazzView: React.FC<Props> = ({ clazz, children: _, onMove, ...props }) =>
     </svg>
   )
 };
+
+export const clazzSize = {
+  width: 100,
+  height: 60,
+} as const;
 
 export default ClazzView;

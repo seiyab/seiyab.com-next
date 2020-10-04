@@ -2,10 +2,12 @@ import clsx from 'clsx';
 import { useCallback } from 'react';
 import { useRecoilState } from "recoil"
 
+import { find } from '@/generic/string';
 import { Clazz, ClazzName } from '@puml/domain';
 import { globalState } from '@puml/state';
 
 import ClazzView from './ClazzView';
+import LinkView from './LinkView';
 import { usePositionState } from './hooks/usePositionState';
 
 interface Props {
@@ -21,8 +23,8 @@ const Diagram: React.FC<Props> = ({ className }) => {
         clazzes: {
           ...prev.clazzes,
           [clazzName]: {
-            x: (prev.clazzes as any)[clazzName].x + dx,
-            y: (prev.clazzes as any)[clazzName].y + dy,
+            x: (find(prev.clazzes, clazzName)?.x ?? 0) + dx,
+            y: (find(prev.clazzes, clazzName)?.y ?? 0) + dy,
           }
         }
       }))
@@ -54,6 +56,17 @@ const Diagram: React.FC<Props> = ({ className }) => {
               }
             )}
           </g>
+          {pumlState.links.map((link) => {
+            const leftPosition = find(positionState.clazzes, link.left.target);
+            const rightPosition = find(positionState.clazzes, link.right.target);
+            if (leftPosition === null || rightPosition === null) return null;
+            return <LinkView
+              key={link.left.target + '#' + link.right.target}
+              link={link}
+              leftPosition={leftPosition}
+              rightPosition={rightPosition}
+            />;
+          })}
         </svg>
       </section>
     </div>

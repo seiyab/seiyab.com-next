@@ -4,8 +4,9 @@ import {
   useState,
 } from 'react';
 
-import { ClazzName } from '@puml/domain';
 import { State } from '@puml/state';
+
+import { PositionState } from '../position';
 
 export const usePositionState = (pumlState: State): [PositionState, Dispatch<SetStateAction<PositionState>>] => {
   const [positionState, setPositionState] = useState<PositionState>({ clazzes: {}});
@@ -26,13 +27,4 @@ export const usePositionState = (pumlState: State): [PositionState, Dispatch<Set
     })
   }
   return [positionState, setPositionState];
-}
-
-interface PositionState {
-  clazzes: Record<ClazzName, Position>,
-}
-
-interface Position {
-  x: number;
-  y: number;
 }
