@@ -38,7 +38,6 @@ const Diagram: React.FC<Props> = ({ className }) => {
       <section>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 600 400"
           width="600"
           height="400"
         >

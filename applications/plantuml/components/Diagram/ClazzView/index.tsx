@@ -84,14 +84,11 @@ const ClazzView: React.FC<Props> = ({ clazz, children, onMove, ...props }) => {
       y={(parse(props.y) ?? 0) + dy}
       width="100"
       height="60"
-      viewBox="0 0 100 60"
       onMouseDown={startDrag}
       onMouseMove={dragging}
       onMouseUp={endDrag}
       className={clsx(props.className, dragState ? style.grabbing : style.grab)}
     >
-      {//<rect width="100" height="60" fill="rgba(255, 255, 255, 0)" stroke="black" />
-      }
       <rect width="100" height="60" fill="white" stroke="black"
       />
       <text
