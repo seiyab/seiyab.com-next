@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useRecoilState } from "recoil"
 
 import { find } from '@/generic/string';
@@ -10,10 +10,16 @@ import ClazzView from './ClazzView';
 import LinkView from './LinkView';
 import { usePositionState } from './hooks/usePositionState';
 import { Position } from './position';
+import { useMoveOnDrag } from '@/hooks/useMoveOnDrag';
 
 interface Props {
   className?: string;
 }
+
+const size = {
+  width: 600,
+  height: 400,
+} as const;
 
 const Diagram: React.FC<Props> = ({ className }) => {
   const [pumlState] = useRecoilState(globalState);
@@ -29,14 +35,30 @@ const Diagram: React.FC<Props> = ({ className }) => {
     },
     [setPositionState],
   );
+  const [frame, setFrame] = useState({ x: 0, y: 0 });
+  const drag = useMoveOnDrag<SVGRectElement>(frame, setFrame);
 
   return (
     <div className={clsx(className)}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="600"
-        height="400"
+        width={size.width}
+        height={size.height}
+        viewBox={`${-frame.x} ${-frame.y} ${size.width} ${size.height}`}
       >
+        {/* listener */}
+        <rect
+          width={size.width}
+          height={size.height}
+          x={-frame.x}
+          y={-frame.y}
+          onMouseDown={drag.onMouseDown}
+          onMouseMove={drag.onMouseMove}
+          onMouseUp={drag.onMouseUp}
+          pointerEvents="visible"
+          fill="none"
+          stroke="none"
+        />
         <g>
           {Object.values<Clazz>(pumlState.clazzes).map(
             (clazz) => {
