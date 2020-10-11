@@ -1,7 +1,9 @@
 .grab {
   cursor: grab;
+  touch-action: none;
 }
 
 .grabbing {
   cursor: grabbing;
+  touch-action: none;
 }

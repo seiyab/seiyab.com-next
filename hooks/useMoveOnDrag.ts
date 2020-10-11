@@ -13,12 +13,10 @@ interface DragState {
   startCursor: Position,
 }
 
-type DragEvent<T extends Element> = React.MouseEvent<T, MouseEvent> & React.PointerEvent<T>
-
 export const useMoveOnDrag = <T extends Element>(argPosition: Position, onMove: (pos: Position) => void): useDragReturn<T> => {
   const [state, setState] = useState<DragState | null>(null);
   const startDrag = useCallback(
-    (event: DragEvent<T>) => {
+    (event: React.PointerEvent<T>) => {
       event.currentTarget.setPointerCapture(event.pointerId);
       setState({
         originalPosition: {
@@ -34,7 +32,8 @@ export const useMoveOnDrag = <T extends Element>(argPosition: Position, onMove: 
     [argPosition.x, argPosition.y],
   );
   const dragging = useCallback(
-    (event: DragEvent<T>) => {
+    (event: React.PointerEvent<T>) => {
+      event.preventDefault();
       if (state === null) return;
       const currentCursor = {
         x: event.pageX,
@@ -48,7 +47,7 @@ export const useMoveOnDrag = <T extends Element>(argPosition: Position, onMove: 
     [state, onMove],
   );
   const endDrag = useCallback(
-    (event: DragEvent<T>) => {
+    (event: React.PointerEvent<T>) => {
       event.currentTarget.releasePointerCapture(event.pointerId)
       setState(null);
       if (state === null) return;
@@ -64,16 +63,16 @@ export const useMoveOnDrag = <T extends Element>(argPosition: Position, onMove: 
     [state, onMove],
   );
   return {
-    onMouseDown: startDrag,
-    onMouseMove: dragging,
-    onMouseUp: endDrag,
+    onPointerDown: startDrag,
+    onPointerMove: dragging,
+    onPointerUp: endDrag,
     dragging: state !== null,
   };
 }
 
 interface useDragReturn<T extends Element> {
-  onMouseDown: (event: DragEvent<T>) => void;
-  onMouseMove: (event: DragEvent<T>) => void;
-  onMouseUp: (event: DragEvent<T>) => void;
+  onPointerDown: (event: React.PointerEvent<T>) => void;
+  onPointerMove: (event: React.PointerEvent<T>) => void;
+  onPointerUp: (event: React.PointerEvent<T>) => void;
   dragging: boolean;
 }

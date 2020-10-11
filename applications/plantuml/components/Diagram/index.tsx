@@ -12,6 +12,8 @@ import { usePositionState } from './hooks/usePositionState';
 import { Position } from './position';
 import { useMoveOnDrag } from '@/hooks/useMoveOnDrag';
 
+import style from './style.module.css';
+
 interface Props {
   className?: string;
 }
@@ -39,7 +41,7 @@ const Diagram: React.FC<Props> = ({ className }) => {
   const drag = useMoveOnDrag<SVGRectElement>(frame, setFrame);
 
   return (
-    <div className={clsx(className)}>
+    <div className={clsx(className, style.diagram)}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width={size.width}
@@ -52,9 +54,9 @@ const Diagram: React.FC<Props> = ({ className }) => {
           height={size.height}
           x={-frame.x}
           y={-frame.y}
-          onMouseDown={drag.onMouseDown}
-          onMouseMove={drag.onMouseMove}
-          onMouseUp={drag.onMouseUp}
+          onPointerDown={drag.onPointerDown}
+          onPointerMove={drag.onPointerMove}
+          onPointerUp={drag.onPointerUp}
           pointerEvents="visible"
           fill="none"
           stroke="none"

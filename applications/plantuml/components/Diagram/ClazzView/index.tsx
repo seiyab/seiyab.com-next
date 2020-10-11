@@ -33,9 +33,9 @@ const ClazzView: React.FC<Props> = ({ clazz, x, y, children: _, onMove, ...props
       y={y}
       width={clazzSize.width}
       height={clazzSize.height}
-      onMouseDown={drag.onMouseDown}
-      onMouseMove={drag.onMouseMove}
-      onMouseUp={drag.onMouseUp}
+      onPointerDown={drag.onPointerDown}
+      onPointerMove={drag.onPointerMove}
+      onPointerUp={drag.onPointerUp}
       className={clsx(props.className, drag.dragging ? style.grabbing : style.grab)}
     >
       <rect width="100" height="60" fill="white" stroke="black"
