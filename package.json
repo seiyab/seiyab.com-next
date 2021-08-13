@@ -18,7 +18,7 @@
     "clsx": "^1.1.1",
     "fp-ts": "^2.8.5",
     "fp-ts-contrib": "^0.1.21",
-    "next": "^10.0.0",
+    "next": "^11.1.0",
     "plantuml-parser": "0.0.16",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
