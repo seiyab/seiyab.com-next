@@ -19,10 +19,17 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["*"],
-      "@asm/*": ["applications/assembly-emulator/*"],
-      "@puml/*": ["applications/plantuml/*"]
-    }
+      "@/*": [
+        "*"
+      ],
+      "@asm/*": [
+        "applications/assembly-emulator/*"
+      ],
+      "@puml/*": [
+        "applications/plantuml/*"
+      ]
+    },
+    "incremental": true
   },
   "exclude": [
     "node_modules"
